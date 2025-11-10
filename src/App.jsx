@@ -19,7 +19,8 @@ const BRAND = {
     heading: "'Merriweather', Georgia, 'Times New Roman', serif",
     body: "'Open Sans', system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
   },
-  bannerUrl: "/fb-cover.png" // place this in /public/fb-cover.png
+  // ⬇️ Use your new banner file here
+  bannerUrl: "/logo01.png" // must exist at /public/logo01.png
 };
 
 // ----------------- Helpers -----------------
@@ -65,32 +66,69 @@ const AppShell = ({ children }) => {
   }
   return (
     <div className="min-h-screen bg-white" style={{ color: color("body"), fontFamily: font("body") }}>
-      <header className="sticky top-0 z-40 backdrop-blur border-b border-transparent" style={{ backgroundColor: color("headerBlue") }}>
-        <nav className="max-w-7xl mx-auto px-6 h-24 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3 no-underline">
-            <img src={BRAND.bannerUrl} alt="One Leader at a Time banner" className="h-16 md:h-20 w-auto object-contain" />
-          </Link>
-          <div className="hidden md:flex items-center gap-6 text-sm">
-            {[
-              { to: "/", label: "Home" },
-              { to: "/about", label: "About" },
-              { to: "/services", label: "Services" },
-              { to: "/elite", label: "ELITE" },
-              { to: "/speaking", label: "Speaking" },
-              { to: "/veterans", label: "Veterans" },
-              { to: "/contact", label: "Contact" }
-            ].map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                className={({ isActive }) => `hover:opacity-90 ${isActive ? "font-semibold" : ""}`}
-                style={{ color: color("link") }}
+      {/* ======= HEADER as FULL-WIDTH BANNER BACKGROUND ======= */}
+      <header
+        className="sticky top-0 z-40 border-b border-transparent"
+        style={{
+          backgroundImage: `url(${BRAND.bannerUrl})`,
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          minHeight: "140px"
+        }}
+      >
+        {/* subtle overlay to keep nav readable */}
+        <div style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.10), rgba(0,0,0,0.10))" }}>
+          <nav className="max-w-7xl mx-auto px-6 h-24 flex items-center justify-between">
+            {/* Optional inline logo (hide if you want ONLY the background): */}
+            <Link to="/" className="flex items-center gap-3 no-underline">
+              <img
+                src={BRAND.bannerUrl}
+                alt="One Leader at a Time banner"
+                className="h-10 w-auto object-contain"
+                onError={(e) => {
+                  e.currentTarget.style.display = "none";
+                  const f = document.getElementById("brand-fallback");
+                  if (f) f.style.display = "block";
+                }}
+              />
+              <span
+                id="brand-fallback"
+                style={{
+                  display: "none",
+                  color: "#FFFFFF",
+                  fontFamily: font("heading"),
+                  fontWeight: 700,
+                  fontSize: "1.1rem",
+                  textShadow: "0 1px 2px rgba(0,0,0,0.35)"
+                }}
               >
-                {item.label}
-              </NavLink>
-            ))}
-          </div>
-        </nav>
+                One Leader at a Time – Leadership Group™
+              </span>
+            </Link>
+
+            <div className="hidden md:flex items-center gap-6 text-sm">
+              {[
+                { to: "/", label: "Home" },
+                { to: "/about", label: "About" },
+                { to: "/services", label: "Services" },
+                { to: "/elite", label: "ELITE" },
+                { to: "/speaking", label: "Speaking" },
+                { to: "/veterans", label: "Veterans" },
+                { to: "/contact", label: "Contact" }
+              ].map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  className={({ isActive }) => `hover:opacity-90 ${isActive ? "font-semibold" : ""}`}
+                  style={{ color: "#FFFFFF", textShadow: "0 1px 2px rgba(0,0,0,0.35)" }}
+                >
+                  {item.label}
+                </NavLink>
+              ))}
+            </div>
+          </nav>
+        </div>
       </header>
 
       <main>{children}</main>
@@ -243,7 +281,6 @@ const ElitePage = () => (
 
 const SpeakingPage = () => (
   <AppShell>
-    {/* Hero / Hook */}
     <section className="w-full" style={{ background: `linear-gradient(180deg, ${color("white")} 0%, ${color("sky")} 100%)` }}>
       <div className="max-w-7xl mx-auto px-6 py-16">
         <h1 className="text-3xl md:text-4xl font-bold" style={{ fontFamily: font("heading"), color: color("headerBlue") }}>Speaking & Keynotes</h1>
@@ -260,11 +297,9 @@ const SpeakingPage = () => (
       </div>
     </section>
 
-    {/* Demo Reel & Fast Facts */}
     <section className="w-full bg-white">
       <div className="max-w-7xl mx-auto px-6 py-12 grid lg:grid-cols-2 gap-8 items-start">
         <div className="aspect-video w-full rounded-xl overflow-hidden border border-slate-200">
-          {/* Replace src with your real reel URL */}
           <iframe
             title="Speaker Demo Reel"
             className="w-full h-full"
@@ -283,7 +318,6 @@ const SpeakingPage = () => (
       </div>
     </section>
 
-    {/* Signature Topics with Outcomes */}
     <section className="w-full" style={{ background: `linear-gradient(180deg, ${color("sky")} 0%, ${color("white")} 100%)` }}>
       <div className="max-w-7xl mx-auto px-6 py-16">
         <h2 className="text-2xl md:text-3xl font-bold" style={{ fontFamily: font("heading"), color: color("headerBlue") }}>Signature Topics</h2>
@@ -316,48 +350,6 @@ const SpeakingPage = () => (
               </div>
             </div>
           ))}
-        </div>
-      </div>
-    </section>
-
-    {/* Social Proof */}
-    <section className="w-full bg-white">
-      <div className="max-w-7xl mx-auto px-6 py-16">
-        <h2 className="text-2xl md:text-3xl font-bold" style={{ fontFamily: font("heading"), color: color("headerBlue") }}>What audiences say</h2>
-        <div className="mt-8 grid md:grid-cols-3 gap-6">
-          {[{
-            q:"Actionable, inspiring, and immediately usable by our managers.", a:"Senior Operations Leader"
-          },{
-            q:"Her E.L.I.T.E.™ framework brought clarity to our org in one hour.", a:"Director, Aerospace Manufacturing"
-          },{
-            q:"Grand-slam keynote. Our teams left with a plan, not just motivation.", a:"Conference Chair"
-          }].map(t => (
-            <blockquote key={t.q} className="rounded-xl border border-slate-200 p-5 bg-white/80">
-              <p className="italic text-slate-700">“{t.q}”</p>
-              <div className="mt-3 text-sm text-slate-600">— {t.a}</div>
-            </blockquote>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    {/* Planner-friendly CTA */}
-    <section className="w-full" style={{ background: `linear-gradient(180deg, ${color("white")} 0%, ${color("sky")} 100%)` }}>
-      <div className="max-w-7xl mx-auto px-6 py-16">
-        <h2 className="text-2xl md:text-3xl font-bold" style={{ fontFamily: font("heading"), color: color("headerBlue") }}>For event planners</h2>
-        <div className="mt-6 grid md:grid-cols-2 gap-6">
-          <ul className="rounded-xl border border-slate-200 p-6 bg-white/80 list-disc pl-6 text-slate-700">
-            <li>Tailored topic & outcomes call (15–20 min)</li>
-            <li>Run-of-show coordination with your team</li>
-            <li>AV: hand-held or lav mic, HDMI, confidence monitor (optional)</li>
-            <li>Slide deck delivery 48–72 hrs prior</li>
-            <li>Book signing / meet-and-greet on request</li>
-          </ul>
-          <div className="rounded-xl border border-slate-200 p-6 bg-white/80 space-y-3">
-            <div className="text-slate-700">Ready to lock dates or request rates?</div>
-            <GoldButton to="/contact" text="Request speaking availability" />
-            <a href="/OneLeaderAtATime_Speaker-OneSheet.pdf" className="text-sm underline" style={{ color: color("headerBlue") }}>Download one-sheet</a>
-          </div>
         </div>
       </div>
     </section>
